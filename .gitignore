@@ -1,0 +1,49 @@
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+
+# Maven
+target/
+.m2/
+*.jar
+*.war
+*.ear
+
+# Gradle
+.gradle/
+build/
+out/
+
+# Spring Boot
+.spring/
+application-*.properties
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Database
+*.db
+*.sqlite
+
+# Temporary files
+*.tmp
+*.temp
+
+# Node (if using frontend)
+node_modules/
+npm-debug.log
+
+# OS
+.DS_Store
+Thumbs.db
