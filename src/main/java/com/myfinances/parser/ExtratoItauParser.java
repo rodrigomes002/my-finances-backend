@@ -2,28 +2,14 @@ package com.myfinances.parser;
 
 import java.util.*;
 import java.util.regex.*;
+
+import com.myfinances.entity.Lancamento;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class ExtratoItauParser {
-
-    public static class Lancamento {
-        LocalDate data;
-        String descricao;
-        BigDecimal valor;
-
-        Lancamento(LocalDate data, String descricao, BigDecimal valor) {
-            this.data = data;
-            this.descricao = descricao;
-            this.valor = valor;
-        }
-
-        @Override
-        public String toString() {
-            return data + " | " + descricao + " | R$ " + valor;
-        }
-    }
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 

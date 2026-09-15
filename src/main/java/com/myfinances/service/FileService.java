@@ -11,13 +11,16 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.myfinances.entity.Lancamento;
 import com.myfinances.parser.ExtratoItauParser;
-import com.myfinances.parser.ExtratoItauParser.Lancamento;
+import com.myfinances.repository.LancamentoRepository;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class FileService {
+
+    private final LancamentoRepository lancamentoRepository;
 
     public void processFile(MultipartFile file) {
         try(PDDocument document = Loader.loadPDF(file.getBytes())){
@@ -28,7 +31,7 @@ public class FileService {
             List<Lancamento> lancamentos = ExtratoItauParser.parse(texto);
 
             for (Lancamento lancamento : lancamentos) {
-                log.info("Lançamento: {}", lancamento);
+                lancamentoRepository.save(lancamento);
             }
 
             log.info("Texto extraído do PDF: {}", texto.substring(0, Math.min(texto.length(), 100))); // Loga os primeiros 100 caracteres do texto extraído
