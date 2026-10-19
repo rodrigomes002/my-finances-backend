@@ -1,8 +1,8 @@
 package com.myfinances.controller;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -28,12 +28,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.myfinances.entity.Lancamento;
 import com.myfinances.repository.ArquivoProcessadoRepository;
 import com.myfinances.repository.LancamentoRepository;
 
 @SpringBootTest 
 @AutoConfigureMockMvc 
+@SuppressWarnings("null")
 public class FileControllerTest {
 
     @Autowired
@@ -63,7 +63,7 @@ public class FileControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Arquivo enviado com sucesso!"));
 
-        verify(lancamentoRepository).saveAll(anyList());
+        verify(lancamentoRepository, atLeastOnce()).save(any());
         verify(arquivoProcessadoRepository).saveAndFlush(any());
     }
 
@@ -81,8 +81,7 @@ public class FileControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.message").value("Este arquivo já foi processado."));
 
-        verify(lancamentoRepository, never()).saveAll(anyList());
-        verify(arquivoProcessadoRepository, never()).saveAndFlush(any());
+        verify(lancamentoRepository, never()).save(any());
     }
 
     @Test

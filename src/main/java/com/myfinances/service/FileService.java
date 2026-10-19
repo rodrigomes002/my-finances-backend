@@ -5,18 +5,19 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.HexFormat;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import com.myfinances.entity.ArquivoProcessado;
 import com.myfinances.entity.Lancamento;
@@ -53,12 +54,12 @@ public class FileService {
             String texto = stripper.getText(document);
 
             List<Lancamento> lancamentos = ExtratoItauParser.parse(texto);
-            lancamentoRepository.saveAll(lancamentos);
+            for (Lancamento lancamento : lancamentos) {
+                lancamentoRepository.save(Objects.requireNonNull(lancamento));
+            }
             try {
-                arquivoProcessadoRepository.saveAndFlush(new ArquivoProcessado(
-                        hash,
-                        file.getOriginalFilename(),
-                        LocalDateTime.now()));
+                arquivoProcessadoRepository.saveAndFlush(
+                        criarArquivoProcessado(hash, file.getOriginalFilename()));
             } catch (DataIntegrityViolationException e) {
                 throw new ArquivoJaProcessadoException();
             }
@@ -66,6 +67,11 @@ public class FileService {
         } catch (IOException e) {
             throw new IllegalArgumentException("Não foi possível processar o arquivo enviado.", e);
         }
+    }
+
+    @NonNull
+    private ArquivoProcessado criarArquivoProcessado(String hash, String nomeArquivo) {
+        return new ArquivoProcessado(hash, nomeArquivo, LocalDateTime.now());
     }
 
     private String calcularSha256(byte[] conteudo) {
