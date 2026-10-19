@@ -145,6 +145,23 @@ docker run -p 8080:8080 --env-file .env myfinances-api
 
 ### Endpoints da API
 
+#### Lançamentos
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/lancamentos` | Listar todos os lançamentos ou filtrar por mês |
+| GET | `/lancamentos/resumo` | Retornar receitas, despesas e saldo total, opcionalmente filtrados por mês |
+
+Ambos os endpoints aceitam o parâmetro opcional `mes` no formato `AAAA-MM`, por exemplo `/lancamentos?mes=2024-02` e `/lancamentos/resumo?mes=2024-02`. Sem o parâmetro, os endpoints mantêm o comportamento de consultar todos os lançamentos. A listagem retorna uma lista JSON com `id`, `data`, `descricao` e `valor` de cada lançamento. O resumo retorna `receitas` (soma dos valores positivos), `despesas` (soma absoluta dos valores negativos) e `saldoTotal` (soma líquida), considerando apenas o mês informado quando aplicável. O CORS está habilitado para requisições de qualquer origem.
+
+#### Arquivos
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/files/upload` | Processar um extrato PDF; retorna `409 Conflict` se o conteúdo do arquivo já tiver sido processado |
+
+Os arquivos processados são identificados pelo hash SHA-256 do conteúdo, portanto renomear um arquivo não permite processá-lo novamente.
+
 #### Usuários (Users)
 
 | Método | Endpoint | Descrição | Autenticação |

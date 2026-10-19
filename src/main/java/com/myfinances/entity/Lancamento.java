@@ -15,17 +15,36 @@ public class Lancamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    private Integer id;
     
-    LocalDate data;
+    private LocalDate data;
     
-    String descricao;
+    private String descricao;
 
-    BigDecimal valor;
+    private BigDecimal valor;
+
+    protected Lancamento() {
+    }
 
     public Lancamento(LocalDate data, String descricao, BigDecimal valor) {
         this.data = data;
         this.descricao = descricao;
         this.valor = valor;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public LocalDate getData() {
+        return data;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public BigDecimal getValor() {
+        return valor;
     }
 }
